@@ -1,0 +1,48 @@
+@import "tailwindcss";
+@theme inline {
+  --color-canvas: #f5f6f3;
+  --color-ink: #24302b;
+  --color-muted: #606e66;
+  --color-line: #dce3dc;
+  --color-soft: #edf2eb;
+  --font-sans: Arial, Helvetica, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+@layer base {
+  body {
+    @apply bg-canvas text-ink font-sans text-sm antialiased;
+  }
+  button {
+    @apply cursor-pointer;
+  }
+  :focus-visible {
+    outline: 2px solid #5a7965;
+    outline-offset: 3px;
+  }
+  h2 {
+    @apply text-base font-semibold tracking-tight;
+  }
+}
+@layer components {
+  .card {
+    @apply overflow-hidden rounded-xl border border-line bg-white;
+  }
+  .card-heading {
+    @apply border-b border-line px-6 py-5;
+  }
+  .muted {
+    @apply text-muted;
+  }
+  .eyebrow {
+    @apply text-[10px] font-semibold uppercase tracking-widest text-muted;
+  }
+  .money {
+    @apply whitespace-nowrap font-mono tabular-nums;
+  }
+  .badge {
+    @apply inline-block rounded-full border border-line bg-canvas px-2.5 py-1 text-[10px] font-medium;
+  }
+  .control {
+    @apply min-h-10 rounded-md border border-line bg-white px-3 py-2 hover:bg-soft;
+  }
+}
