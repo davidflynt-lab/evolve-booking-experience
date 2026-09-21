@@ -45,17 +45,17 @@ export function PayoutLifecycle({
       name: "Bank settlement",
       date: canceled
         ? "No deposit"
-        : invalid
-          ? "Details need review"
-          : formatDate(
-              paid ? b.payout.depositedDate! : b.payout.expectedDepositDate,
-              true,
-            ),
+        : formatDate(
+            b.payout.depositedDate ?? b.payout.expectedDepositDate,
+            true,
+          ),
       note: canceled
         ? "Zero payout"
-        : paid
-          ? "Deposited · Recorded"
-          : "Estimated arrival",
+        : invalid
+          ? "Date in source record"
+          : paid
+            ? "Deposited · Recorded"
+            : "Estimated arrival",
       done: paid,
     },
   ];

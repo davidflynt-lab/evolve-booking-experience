@@ -50,7 +50,7 @@ export function HeroPayout({
               }
             >
               {issues.length
-                ? "Details need review"
+                ? "Under Review"
                 : canceled
                   ? "Canceled"
                   : paid
@@ -62,17 +62,17 @@ export function HeroPayout({
           </div>
         </div>
         <div className="text-sm sm:text-right">
-          <strong className="font-medium">
-            <NumericText>
-              {issues.length
-                ? "Deposit information needs review"
-                : canceled
+          {issues.length === 0 && (
+            <strong className="font-medium">
+              <NumericText>
+                {canceled
                   ? "Zero deposit"
                   : paid
                     ? `Deposited ${formatDate(p.depositedDate!, true)}`
                     : `Estimated deposit ${formatDate(p.expectedDepositDate, true)}`}
-            </NumericText>
-          </strong>
+              </NumericText>
+            </strong>
+          )}
           <p className="muted mt-2 text-sm leading-relaxed">
             <NumericText>
               {canceled
@@ -82,23 +82,17 @@ export function HeroPayout({
           </p>
         </div>
       </div>
-      {futureDatedDeposit && (
-        <div
-          className="mx-7 mb-5"
-          role="status"
-          data-testid="future-deposit-notice"
-        >
-          <Badge tone="pending">
-            <NumericText>{`Notice: Deposit date is future-dated relative to ${formatDate(today)} evaluation date`}</NumericText>
-          </Badge>
-        </div>
-      )}
       {issues.length > 0 && (
         <div
           role="alert"
-          className="mx-7 mb-5 rounded-2xl border border-amber-300 bg-amber-50 p-3 text-sm"
+          data-testid="payout-audit-notice"
+          className="mx-7 mb-5 rounded-2xl border border-[#EADCC5] bg-[#FBF6ED] p-4 text-sm leading-relaxed"
         >
-          {issues.join(" ")}
+          <NumericText>
+            {futureDatedDeposit
+              ? `Deposit recorded for ${formatDate(p.depositedDate!, true)}, which is after the current system date (${formatDate(today, true)}). Requires operational reconciliation.`
+              : issues.join(" ")}
+          </NumericText>
         </div>
       )}
       <PayoutLifecycle booking={booking} invalid={issues.length > 0} />
