@@ -73,7 +73,7 @@ export function HeroPayout({
                     : `Estimated deposit ${formatDate(p.expectedDepositDate, true)}`}
             </NumericText>
           </strong>
-          <p className="muted mt-2 text-xs">
+          <p className="muted mt-2 text-sm leading-relaxed">
             <NumericText>
               {canceled
                 ? "No transfer for this booking"

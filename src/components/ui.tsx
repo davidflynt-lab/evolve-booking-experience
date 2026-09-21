@@ -14,7 +14,9 @@ export function Card({
     <section className={`card ${soft ? "card-soft" : ""}`}>
       <header className="card-heading">
         <h2>{title}</h2>
-        {subtitle && <p className="muted text-xs mt-2">{subtitle}</p>}
+        {subtitle && (
+          <p className="muted text-sm leading-relaxed mt-2">{subtitle}</p>
+        )}
       </header>
       <div className="p-7">{children}</div>
     </section>

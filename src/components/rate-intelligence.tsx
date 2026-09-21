@@ -21,9 +21,11 @@ export function RateIntelligence({
           {f.averageNightly === null
             ? "Unavailable"
             : `≈ ${money(f.averageNightly)}`}{" "}
-          <span className="font-sans text-xs text-muted">/ night</span>
+          <span className="font-sans text-sm leading-relaxed text-muted">
+            / night
+          </span>
         </p>
-        <p className="muted mt-3 text-xs">
+        <p className="muted mt-3 text-sm leading-relaxed">
           Calculated across <span className="numeric">{b.stay.nights}</span>{" "}
           nights from aggregate accommodation revenue. Rounded average is
           display-only.
@@ -34,11 +36,11 @@ export function RateIntelligence({
             Booked <span className="numeric">{f.leadTimeDays}</span> days in
             advance
           </p>
-          <p className="numeric muted mt-2 text-xs">
+          <p className="numeric muted mt-2 text-sm leading-relaxed">
             {formatDate(b.dateBooked, true)} →{" "}
             {formatDate(b.stay.checkIn, true)}
           </p>
-          <p className="muted mt-2 text-xs">
+          <p className="muted mt-2 text-sm leading-relaxed">
             Lead time does not explain why this rate was set.
           </p>
         </div>
@@ -52,7 +54,7 @@ export function RateIntelligence({
           <div>
             <p className="eyebrow mb-2">Rate data</p>
             <Badge>Aggregate accommodation supplied</Badge>
-            <p className="muted mt-2 text-xs">
+            <p className="muted mt-2 text-sm leading-relaxed">
               Daily rates, discount codes, and booking-specific pricing
               rationale are not provided. Standard pricing cannot be confirmed.
             </p>

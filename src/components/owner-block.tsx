@@ -9,7 +9,7 @@ export function OwnerBlock({ booking }: { booking: Block }) {
     >
       <div className="flex items-center gap-6">
         <div className="overflow-hidden rounded-2xl border border-line text-center">
-          <div className="bg-soft px-6 py-2 text-xs">
+          <div className="bg-soft px-6 py-2 text-sm leading-relaxed">
             {formatDate(booking.stay.checkIn).split(" ")[0]}
           </div>
           <div className="money p-3 text-4xl">

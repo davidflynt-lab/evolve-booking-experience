@@ -54,7 +54,7 @@
     @apply text-muted;
   }
   .eyebrow {
-    @apply text-[10px] font-semibold uppercase tracking-widest text-muted;
+    @apply text-sm leading-relaxed font-semibold uppercase tracking-widest text-muted;
   }
   .money {
     @apply whitespace-nowrap font-mono tabular-nums;
@@ -63,7 +63,7 @@
     @apply font-mono tabular-nums;
   }
   .badge {
-    @apply inline-block rounded-full border border-line bg-canvas px-3 py-1.5 text-[11px] font-medium;
+    @apply inline-block rounded-full border border-line bg-canvas px-3 py-1.5 text-xs font-medium;
   }
   .badge-pending {
     color: #d97706;

@@ -19,11 +19,6 @@ export function ReconciliationWaterfall({
           : "Every amount visible. No hidden calculations."
       }
     >
-      {f.canceled && (
-        <p className="mb-4 rounded-2xl bg-soft p-3 text-sm font-medium">
-          Stay canceled before check-in · Zero deposit
-        </p>
-      )}
       <MoneyRow
         label={
           f.canceled ? "Original recorded charges" : "Recorded guest charges"
@@ -39,15 +34,16 @@ export function ReconciliationWaterfall({
           }
           amount={`${f.canceled ? "" : "−"}${money(f.totalTaxes)}`}
         />
-        <p className="muted mb-3 text-xs">
-          {f.canceled
-            ? "Historical charges; remittance and refund details unavailable."
-            : "Non-owner funds, collected for tax authorities and excluded from payout."}
-        </p>
+        {!f.canceled && (
+          <p className="muted mb-3 text-sm leading-relaxed">
+            Non-owner funds, collected for tax authorities and excluded from
+            payout.
+          </p>
+        )}
         {f.taxes.map((t) => (
           <div
             key={t.description}
-            className="muted flex justify-between gap-4 py-1 text-xs"
+            className="muted flex justify-between gap-4 py-1 text-sm leading-relaxed"
           >
             <span>
               {t.description}
@@ -67,16 +63,16 @@ export function ReconciliationWaterfall({
           amount={money(f.grossRevenue)}
         />
         <div className="mb-4 border-l-2 border-line pl-3">
-          <div className="muted flex justify-between py-1 text-xs">
+          <div className="muted flex justify-between py-1 text-sm leading-relaxed">
             <span>Base accommodation</span>
             <span className="money">{money(f.baseRental)}</span>
           </div>
-          <div className="muted flex justify-between py-1 text-xs">
+          <div className="muted flex justify-between py-1 text-sm leading-relaxed">
             <span>
               <NumericText>
                 {f.canceled
                   ? "Original cleaning charge"
-                  : "Cleaning fee · 100% pass-through to owner"}
+                  : "Cleaning fee · 100% pass through to owner"}
               </NumericText>
             </span>
             <span className="money">+{money(f.cleaningFee)}</span>
@@ -91,13 +87,11 @@ export function ReconciliationWaterfall({
         }
         amount={`${f.canceled ? "" : "−"}${money(f.managementFee)}`}
       />
-      <p className="muted text-xs">
-        <NumericText>
-          {f.canceled
-            ? "Management fee is zero for this canceled record."
-            : `15% × ${money(f.baseRental)} accommodation = ${money(f.managementFee)}. No commission on cleaning in this exercise.`}
-        </NumericText>
-      </p>
+      {!f.canceled && (
+        <p className="muted text-sm leading-relaxed">
+          <NumericText>{`15% × ${money(f.baseRental)} accommodation = ${money(f.managementFee)}. No commission on cleaning in this exercise.`}</NumericText>
+        </p>
+      )}
       {f.discrepancy && (
         <p
           role="alert"
@@ -110,17 +104,17 @@ export function ReconciliationWaterfall({
       <div className="mt-5 rounded-2xl bg-soft px-4">
         <MoneyRow prominent label="Net owner payout" amount={money(f.payout)} />
       </div>
-      <p className="mt-4 border-l-2 border-line pl-3 text-xs">
-        <NumericText>
-          {f.canceled
-            ? "Original charges do not establish a completed guest payment or refund."
-            : `The ${money(f.cleaningFee)} cleaning fee passes through to the owner in full.`}
-        </NumericText>
-      </p>
-      <p className="muted mt-4 text-[11px]">
-        Based on supplied booking charges. Separate channel fees and
-        booking-level tax remittance confirmations are not provided.
-      </p>
+      {f.canceled ? (
+        <p className="mt-4 border-l-2 border-line pl-3 text-sm leading-relaxed">
+          Original charges do not establish a completed guest payment or refund
+          · Zero deposit
+        </p>
+      ) : (
+        <p className="muted mt-4 text-sm leading-relaxed">
+          Based on supplied booking charges. Separate channel fees and
+          booking-level tax remittance confirmations are not provided.
+        </p>
+      )}
     </Card>
   );
 }

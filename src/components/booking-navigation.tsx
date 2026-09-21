@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { useRef, useState, type KeyboardEvent } from "react";
 import type { Booking } from "@/types/booking";
 import { money, toCents } from "@/lib/financials";
@@ -78,8 +79,15 @@ export function BookingNavigation({
       <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-3 px-6 py-4">
         <nav
           aria-label="Breadcrumb"
-          className="flex items-center gap-3 text-xs text-muted"
+          className="flex items-center gap-3 text-sm leading-relaxed text-muted"
         >
+          <Image
+            src="/logo_black.svg"
+            alt="Evolve"
+            width={28}
+            height={28}
+            className="mr-3 h-7 w-7 shrink-0"
+          />
           <span className="text-lg font-bold tracking-tight text-ink">
             evolve
           </span>
@@ -103,7 +111,7 @@ export function BookingNavigation({
               aria-haspopup="listbox"
               aria-expanded={open}
               aria-controls="booking-list"
-              className="control text-left text-xs"
+              className="control text-left text-sm leading-relaxed"
               onClick={() => (open ? setOpen(false) : show())}
             >
               {selected ? (
@@ -112,7 +120,7 @@ export function BookingNavigation({
                   <span className="numeric">
                     {stayRange(selected.stay.checkIn, selected.stay.checkOut)}
                   </span>{" "}
-                  ({statusLabel(selected)})
+                  {`(${statusLabel(selected)})`}
                 </>
               ) : (
                 "Select a booking"
@@ -150,7 +158,7 @@ export function BookingNavigation({
                       aria-selected={b.id === selected?.id}
                       tabIndex={i === active ? 0 : -1}
                       data-id={b.id}
-                      className={`flex cursor-pointer items-center justify-between gap-4 min-h-14 rounded-xl p-3 text-xs outline-offset-[-2px] hover:bg-soft ${b.id === selected?.id ? "bg-soft" : ""}`}
+                      className={`flex cursor-pointer items-center justify-between gap-4 min-h-14 rounded-xl p-3 text-sm leading-relaxed outline-offset-[-2px] hover:bg-soft ${b.id === selected?.id ? "bg-soft" : ""}`}
                       onFocus={() => setActive(i)}
                       onClick={() => choose(i, true)}
                     >

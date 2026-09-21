@@ -64,7 +64,7 @@ export function BookingExperience({
                     ? `${booking.guest.name}’s booking`
                     : "Owner reserved block"}
                 </h1>
-                <p className="numeric muted mt-3 text-xs">
+                <p className="numeric muted mt-3 text-sm leading-relaxed">
                   {formatDate(booking.stay.checkIn, true)} –{" "}
                   {formatDate(booking.stay.checkOut, true)} ·{" "}
                   {booking.stay.nights}{" "}
@@ -72,7 +72,7 @@ export function BookingExperience({
                   {booking.bookingSite && ` · ${booking.bookingSite}`}
                 </p>
               </div>
-              <span className="muted text-xs">
+              <span className="muted text-sm leading-relaxed">
                 {booking.status === "blocked" ? "Block" : "Booking"}{" "}
                 <span className="money">{booking.id}</span>
               </span>
@@ -95,7 +95,7 @@ export function BookingExperience({
             )}
           </>
         )}
-        <p className="numeric muted mt-6 text-[11px]">
+        <p className="numeric muted mt-6 text-sm leading-relaxed">
           Synthetic exercise data · As of {formatDate(today, true)} · USD
         </p>
         <div role="status" aria-live="polite" className="sr-only">
