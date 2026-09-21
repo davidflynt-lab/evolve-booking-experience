@@ -3,7 +3,7 @@ import { useRef, useState, type KeyboardEvent } from "react";
 import type { Booking } from "@/types/booking";
 import { money, toCents } from "@/lib/financials";
 import { stayRange } from "@/lib/dates";
-import { Badge } from "./ui";
+import { Badge, ChevronIcon } from "./ui";
 export const statusLabel = (b: Booking) =>
   b.status === "blocked"
     ? "Nonfinancial"
@@ -20,7 +20,7 @@ export function BookingNavigation({
   property,
 }: {
   bookings: Booking[];
-  selected: Booking;
+  selected: Booking | undefined;
   onSelect: (id: string) => void;
   property: string;
 }) {
@@ -28,7 +28,7 @@ export function BookingNavigation({
   const [active, setActive] = useState(0);
   const trigger = useRef<HTMLButtonElement>(null);
   const options = useRef<(HTMLLIElement | null)[]>([]);
-  const index = bookings.findIndex((b) => b.id === selected.id);
+  const index = bookings.findIndex((b) => b.id === selected?.id);
   const choose = (i: number, focus = false) => {
     onSelect(bookings[(i + bookings.length) % bookings.length].id);
     setOpen(false);
@@ -40,7 +40,7 @@ export function BookingNavigation({
     options.current[next]?.focus();
   };
   const show = () => {
-    setActive(index);
+    setActive(Math.max(index, 0));
     setOpen(true);
   };
   // Only this selector handles shortcuts. No window/document keyboard listeners.
@@ -49,7 +49,14 @@ export function BookingNavigation({
       return;
     if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
       event.preventDefault();
-      choose(index + (event.key === "ArrowRight" ? 1 : -1), true);
+      choose(
+        index < 0
+          ? event.key === "ArrowRight"
+            ? 0
+            : bookings.length - 1
+          : index + (event.key === "ArrowRight" ? 1 : -1),
+        true,
+      );
     } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
       event.preventDefault();
       if (open) focusOption(active + (event.key === "ArrowDown" ? 1 : -1));
@@ -99,9 +106,17 @@ export function BookingNavigation({
               className="control text-left text-xs"
               onClick={() => (open ? setOpen(false) : show())}
             >
-              {selected.guest?.name ?? "Owner Block"} ·{" "}
-              {stayRange(selected.stay.checkIn, selected.stay.checkOut)} (
-              {statusLabel(selected)}){" "}
+              {selected ? (
+                <>
+                  {selected.guest?.name ?? "Owner Block"} ·{" "}
+                  <span className="numeric">
+                    {stayRange(selected.stay.checkIn, selected.stay.checkOut)}
+                  </span>{" "}
+                  ({statusLabel(selected)})
+                </>
+              ) : (
+                "Select a booking"
+              )}{" "}
               <span aria-hidden="true" className="ml-3">
                 ▾
               </span>
@@ -122,7 +137,7 @@ export function BookingNavigation({
                   id="booking-list"
                   role="listbox"
                   aria-label="Bookings"
-                  className="absolute left-0 top-full z-10 mt-2 max-h-[65vh] w-[370px] max-w-[85vw] overflow-auto rounded-xl border border-line bg-white p-1.5 shadow-xl"
+                  className="absolute left-0 top-full z-10 mt-2 max-h-[65vh] w-[370px] max-w-[85vw] overflow-auto rounded-2xl border border-line bg-white p-2 shadow-[0_16px_48px_-12px_rgba(15,40,42,0.2)]"
                 >
                   {bookings.map((b, i) => (
                     <li
@@ -132,10 +147,10 @@ export function BookingNavigation({
                         if (node && i === active) node.focus();
                       }}
                       role="option"
-                      aria-selected={b.id === selected.id}
+                      aria-selected={b.id === selected?.id}
                       tabIndex={i === active ? 0 : -1}
                       data-id={b.id}
-                      className={`flex cursor-pointer items-center justify-between gap-4 rounded-md p-3 text-xs outline-offset-[-2px] hover:bg-soft ${b.id === selected.id ? "bg-soft" : ""}`}
+                      className={`flex cursor-pointer items-center justify-between gap-4 min-h-14 rounded-xl p-3 text-xs outline-offset-[-2px] hover:bg-soft ${b.id === selected?.id ? "bg-soft" : ""}`}
                       onFocus={() => setActive(i)}
                       onClick={() => choose(i, true)}
                     >
@@ -156,7 +171,15 @@ export function BookingNavigation({
                         </span>
                       </span>
                       <span className="flex flex-col items-end gap-1">
-                        <Badge>{statusLabel(b)}</Badge>
+                        <Badge
+                          tone={
+                            b.payout && b.payout.status !== "scheduled"
+                              ? b.payout.status
+                              : "neutral"
+                          }
+                        >
+                          {statusLabel(b)}
+                        </Badge>
                         <span className="money">
                           {b.payout
                             ? money(toCents(b.payout.amount))
@@ -172,16 +195,16 @@ export function BookingNavigation({
           <button
             className="control px-3"
             aria-label="Previous booking"
-            onClick={() => choose(index - 1)}
+            onClick={() => choose(index < 0 ? bookings.length - 1 : index - 1)}
           >
-            ‹
+            <ChevronIcon direction="left" />
           </button>
           <button
             className="control px-3"
             aria-label="Next booking"
             onClick={() => choose(index + 1)}
           >
-            ›
+            <ChevronIcon direction="right" />
           </button>
         </div>
       </div>

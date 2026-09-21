@@ -2,7 +2,7 @@ import type { Reservation } from "@/types/booking";
 import type { Financials } from "@/lib/financials";
 import { money } from "@/lib/financials";
 import { formatDate } from "@/lib/dates";
-import { Card, Badge } from "./ui";
+import { Card, Badge, NumericText } from "./ui";
 export function RateIntelligence({
   booking: b,
   financials: f,
@@ -12,7 +12,10 @@ export function RateIntelligence({
 }) {
   return (
     <aside className="space-y-5">
-      <Card title={f.canceled ? "Original booked rates" : "Rate intelligence"}>
+      <Card
+        soft
+        title={f.canceled ? "Original booked rates" : "Rate intelligence"}
+      >
         <p className="eyebrow">Average accommodation rate</p>
         <p className="money mt-2 text-3xl">
           {f.averageNightly === null
@@ -21,15 +24,17 @@ export function RateIntelligence({
           <span className="font-sans text-xs text-muted">/ night</span>
         </p>
         <p className="muted mt-3 text-xs">
-          Calculated across {b.stay.nights} nights from aggregate accommodation
-          revenue. Rounded average is display-only.
+          Calculated across <span className="numeric">{b.stay.nights}</span>{" "}
+          nights from aggregate accommodation revenue. Rounded average is
+          display-only.
         </p>
         <div className="mt-5 border-t border-line pt-5">
           <p className="eyebrow">Advance booking lead time</p>
           <p className="mt-2 font-medium">
-            Booked {f.leadTimeDays} days in advance
+            Booked <span className="numeric">{f.leadTimeDays}</span> days in
+            advance
           </p>
-          <p className="muted mt-2 text-xs">
+          <p className="numeric muted mt-2 text-xs">
             {formatDate(b.dateBooked, true)} →{" "}
             {formatDate(b.stay.checkIn, true)}
           </p>
@@ -58,7 +63,9 @@ export function RateIntelligence({
           </div>
           <div>
             <p className="eyebrow mb-2">Management plan</p>
-            <Badge>Plus · 15% of accommodation</Badge>
+            <Badge tone="plus">
+              <NumericText>Plus · 15% of accommodation</NumericText>
+            </Badge>
           </div>
         </div>
       </Card>

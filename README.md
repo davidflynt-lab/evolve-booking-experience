@@ -50,7 +50,7 @@ The selector uses a normal button with `aria-haspopup="listbox"` and `aria-expan
 ## Data boundaries and intentional assumptions
 
 - Today is fixed to May 17, 2026.
-- Processing dates are illustrative estimates two weekdays after check-in, without accounting for public holidays; they are never marked as confirmed processing events.
+- Stage 3 displays typical processing timing (~2 business days post check-in), not a calculated date or confirmation of initiation.
 - The stated 5–9 business-day settlement convention is measured from check-in. Supplied sample settlement dates can differ from it.
 - Charges do not prove guest payment or tax remittance. Daily prices, discount codes, and causal pricing explanations are absent.
 - Cancellation retains original charges but does not invent refund information.
@@ -59,7 +59,7 @@ The selector uses a normal button with `aria-haspopup="listbox"` and `aria-expan
 
 ## Scope
 
-This is a runnable production-build scaffold, not a deployed service. It has no backend, authentication, real bank integration, or fabricated pricing explanations. Selection is local UI state and resets to Adaeze on reload; shareable record routes can be added separately. The original standalone wireframe is retained outside this application.
+This is a runnable production-build scaffold, not a deployed service. It has no backend, authentication, real bank integration, or fabricated pricing explanations. All 40 records are reachable through `/?bookingId=<id>`. Missing parameters default to Adaeze; unknown or empty IDs display an accessible not-found card. Preset and pager selections update the URL, and browser back/forward restore selection. The five curated presets remain in the dropdown; when a nonpreset or unknown record is open, Next enters the presets at Adaeze and Previous at the owner block. The missing-record view is a client-rendered state within the static page, not an HTTP 404 response. The original standalone wireframe is retained outside this application.
 
 Configuration follows the official Next.js App Router and Tailwind PostCSS setup:
 

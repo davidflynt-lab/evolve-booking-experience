@@ -8,7 +8,7 @@ export function OwnerBlock({ booking }: { booking: Block }) {
       subtitle="These dates are unavailable for guest bookings."
     >
       <div className="flex items-center gap-6">
-        <div className="overflow-hidden rounded-lg border border-line text-center">
+        <div className="overflow-hidden rounded-2xl border border-line text-center">
           <div className="bg-soft px-6 py-2 text-xs">
             {formatDate(booking.stay.checkIn).split(" ")[0]}
           </div>
@@ -17,12 +17,13 @@ export function OwnerBlock({ booking }: { booking: Block }) {
           </div>
         </div>
         <div>
-          <h2>
+          <h2 className="font-mono text-base tabular-nums">
             {formatDate(booking.stay.checkIn, true)} –{" "}
             {formatDate(booking.stay.checkOut, true)}
           </h2>
           <p className="muted my-3 text-sm">
-            {booking.stay.nights} night reserved · End date exclusive
+            <span className="numeric">{booking.stay.nights}</span> night
+            reserved · End date exclusive
           </p>
           <Badge>Owner block · No guest reservation</Badge>
         </div>

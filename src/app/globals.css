@@ -1,12 +1,17 @@
 @import "tailwindcss";
 @theme inline {
-  --color-canvas: #f5f6f3;
-  --color-ink: #24302b;
-  --color-muted: #606e66;
-  --color-line: #dce3dc;
-  --color-soft: #edf2eb;
-  --font-sans: Arial, Helvetica, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Consolas, monospace;
+  --color-canvas: #f8f7f4;
+  --color-ink: #0f282a;
+  --color-muted: #5f706d;
+  --color-line: #e5e2dc;
+  --color-soft: #f2efe9;
+  --color-violet: #8a38f5;
+  --color-pending: #d97706;
+  --color-paid: #059669;
+  --color-canceled: #e11d48;
+  --font-sans: "Plus Jakarta Sans Variable", Arial, sans-serif;
+  --font-display: "Newsreader Variable", Georgia, serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
 }
 @layer base {
   body {
@@ -16,19 +21,34 @@
     @apply cursor-pointer;
   }
   :focus-visible {
-    outline: 2px solid #5a7965;
-    outline-offset: 3px;
+    outline: 2px solid #8a38f5;
+    outline-offset: 4px;
+  }
+  h1,
+  h2 {
+    @apply font-display font-medium tracking-tight;
   }
   h2 {
-    @apply text-base font-semibold tracking-tight;
+    @apply text-2xl leading-tight;
+  }
+  ::selection {
+    background: #eee0fd;
+    color: #0f282a;
   }
 }
 @layer components {
   .card {
-    @apply overflow-hidden rounded-xl border border-line bg-white;
+    @apply overflow-hidden rounded-3xl border border-line bg-white;
+    box-shadow:
+      0 8px 32px -12px rgb(15 40 42 / 8%),
+      0 2px 6px rgb(15 40 42 / 2%);
   }
   .card-heading {
-    @apply border-b border-line px-6 py-5;
+    @apply border-b border-line px-7 py-6;
+  }
+  .card-soft {
+    @apply rounded-2xl bg-soft;
+    box-shadow: none;
   }
   .muted {
     @apply text-muted;
@@ -39,10 +59,41 @@
   .money {
     @apply whitespace-nowrap font-mono tabular-nums;
   }
+  .numeric {
+    @apply font-mono tabular-nums;
+  }
   .badge {
-    @apply inline-block rounded-full border border-line bg-canvas px-2.5 py-1 text-[10px] font-medium;
+    @apply inline-block rounded-full border border-line bg-canvas px-3 py-1.5 text-[11px] font-medium;
+  }
+  .badge-pending {
+    color: #d97706;
+    background: #fffbeb;
+    border-color: #fde6b5;
+  }
+  .badge-paid {
+    color: #059669;
+    background: #ecfdf5;
+    border-color: #c3efdf;
+  }
+  .badge-canceled {
+    color: #e11d48;
+    background: #fff1f2;
+    border-color: #ffd5dd;
+  }
+  .badge-plus {
+    color: #8a38f5;
+    background: #f5edff;
+    border-color: #e5d4fc;
   }
   .control {
-    @apply min-h-10 rounded-md border border-line bg-white px-3 py-2 hover:bg-soft;
+    @apply min-h-11 min-w-11 rounded-xl border border-line bg-white px-3 py-2 transition-colors hover:bg-soft;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
   }
 }

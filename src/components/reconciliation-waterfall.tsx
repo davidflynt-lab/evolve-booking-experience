@@ -1,6 +1,6 @@
 import type { Financials } from "@/lib/financials";
 import { money } from "@/lib/financials";
-import { Card, MoneyRow } from "./ui";
+import { Card, MoneyRow, NumericText } from "./ui";
 export function ReconciliationWaterfall({
   financials: f,
 }: {
@@ -20,7 +20,7 @@ export function ReconciliationWaterfall({
       }
     >
       {f.canceled && (
-        <p className="mb-4 rounded-md bg-soft p-3 text-sm font-medium">
+        <p className="mb-4 rounded-2xl bg-soft p-3 text-sm font-medium">
           Stay canceled before check-in · Zero deposit
         </p>
       )}
@@ -30,7 +30,7 @@ export function ReconciliationWaterfall({
         }
         amount={money(f.recordedCharges)}
       />
-      <div className="rounded-lg bg-canvas px-3 pb-3">
+      <div className="rounded-2xl bg-soft px-4 pb-4">
         <MoneyRow
           label={
             f.canceled
@@ -51,8 +51,9 @@ export function ReconciliationWaterfall({
           >
             <span>
               {t.description}
-              {t.rate !== null &&
-                ` · ${t.derived ? "≈ " : ""}${Number((t.rate * 100).toFixed(2))}%`}
+              {t.rate !== null && (
+                <span className="numeric">{` · ${t.derived ? "≈ " : ""}${Number((t.rate * 100).toFixed(2))}%`}</span>
+              )}
             </span>
             <span className="money">{money(t.cents)}</span>
           </div>
@@ -72,9 +73,11 @@ export function ReconciliationWaterfall({
           </div>
           <div className="muted flex justify-between py-1 text-xs">
             <span>
-              {f.canceled
-                ? "Original cleaning charge"
-                : "Cleaning fee · 100% to owner"}
+              <NumericText>
+                {f.canceled
+                  ? "Original cleaning charge"
+                  : "Cleaning fee · 100% pass-through to owner"}
+              </NumericText>
             </span>
             <span className="money">+{money(f.cleaningFee)}</span>
           </div>
@@ -83,15 +86,17 @@ export function ReconciliationWaterfall({
       <MoneyRow
         label={
           f.canceled
-            ? "Current Evolve management fee"
+            ? "Current Evolve Plus management fee"
             : "Evolve Plus management fee"
         }
         amount={`${f.canceled ? "" : "−"}${money(f.managementFee)}`}
       />
       <p className="muted text-xs">
-        {f.canceled
-          ? "Management fee is zero for this canceled record."
-          : `15% × ${money(f.baseRental)} accommodation = ${money(f.managementFee)}. No commission on cleaning in this exercise.`}
+        <NumericText>
+          {f.canceled
+            ? "Management fee is zero for this canceled record."
+            : `15% × ${money(f.baseRental)} accommodation = ${money(f.managementFee)}. No commission on cleaning in this exercise.`}
+        </NumericText>
       </p>
       {f.discrepancy && (
         <p
@@ -102,13 +107,15 @@ export function ReconciliationWaterfall({
           {money(f.payout)}. Review required before relying on this record.
         </p>
       )}
-      <div className="mt-5 rounded-lg bg-soft px-4">
+      <div className="mt-5 rounded-2xl bg-soft px-4">
         <MoneyRow prominent label="Net owner payout" amount={money(f.payout)} />
       </div>
       <p className="mt-4 border-l-2 border-line pl-3 text-xs">
-        {f.canceled
-          ? "Original charges do not establish a completed guest payment or refund."
-          : `The ${money(f.cleaningFee)} cleaning fee passes through in full to offset your third-party cleaning expenses.`}
+        <NumericText>
+          {f.canceled
+            ? "Original charges do not establish a completed guest payment or refund."
+            : `The ${money(f.cleaningFee)} cleaning fee passes through to the owner in full.`}
+        </NumericText>
       </p>
       <p className="muted mt-4 text-[11px]">
         Based on supplied booking charges. Separate channel fees and

@@ -1,5 +1,7 @@
 "use client";
-import { useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { DEFAULT_BOOKING_ID, getBookingById } from "@/lib/data";
+import { BookingNotFound } from "./booking-not-found";
 import type { Booking, Dataset } from "@/types/booking";
 import { formatDate } from "@/lib/dates";
 import { calculateFinancials } from "@/lib/financials";
@@ -19,9 +21,20 @@ export function BookingExperience({
   listing: Dataset["listing"];
   today: string;
 }) {
-  const [selectedId, setSelectedId] = useState(bookings[0].id);
-  const booking = bookings.find((b) => b.id === selectedId)!;
-  const financials = calculateFinancials(booking);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const booking = getBookingById(
+    searchParams.get("bookingId") ?? DEFAULT_BOOKING_ID,
+  );
+  const selectBooking = (id: string) => {
+    const resolved = getBookingById(id);
+    if (!resolved) return;
+    const nextParams = new URLSearchParams(searchParams.toString());
+    nextParams.set("bookingId", resolved.id);
+    router.push(`${pathname}?${nextParams.toString()}`, { scroll: false });
+  };
+  const financials = booking ? calculateFinancials(booking) : null;
   return (
     <>
       <a
@@ -33,50 +46,62 @@ export function BookingExperience({
       <BookingNavigation
         bookings={bookings}
         selected={booking}
-        onSelect={setSelectedId}
+        onSelect={selectBooking}
         property={listing.name}
       />
       <main id="booking-content" className="mx-auto max-w-6xl px-6 py-8">
-        <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="eyebrow">
-              {listing.name} · {listing.city}, {listing.state}
-            </p>
-            <h1 className="mt-2 text-3xl font-semibold tracking-tight">
-              {booking.guest
-                ? `${booking.guest.name}’s booking`
-                : "Owner reserved block"}
-            </h1>
-            <p className="muted mt-2 text-xs">
-              {formatDate(booking.stay.checkIn, true)} –{" "}
-              {formatDate(booking.stay.checkOut, true)} · {booking.stay.nights}{" "}
-              {booking.stay.nights === 1 ? "night" : "nights"}
-              {booking.bookingSite && ` · ${booking.bookingSite}`}
-            </p>
-          </div>
-          <span className="muted text-xs">
-            {booking.status === "blocked" ? "Block" : "Booking"}{" "}
-            <span className="money">{booking.id}</span>
-          </span>
-        </div>
-        {booking.status === "blocked" ? (
-          <OwnerBlock booking={booking} />
+        {!booking ? (
+          <BookingNotFound onReturn={() => selectBooking(DEFAULT_BOOKING_ID)} />
         ) : (
-          financials && (
-            <>
-              <HeroPayout booking={booking} owner={owner} today={today} />
-              <div className="mt-5 grid items-start gap-5 lg:grid-cols-[1.6fr_1fr]">
-                <ReconciliationWaterfall financials={financials} />
-                <RateIntelligence booking={booking} financials={financials} />
+          <>
+            <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <p className="eyebrow">
+                  {listing.name} · {listing.city}, {listing.state}
+                </p>
+                <h1 className="mt-2 font-display text-4xl font-medium tracking-tight sm:text-5xl">
+                  {booking.guest
+                    ? `${booking.guest.name}’s booking`
+                    : "Owner reserved block"}
+                </h1>
+                <p className="numeric muted mt-3 text-xs">
+                  {formatDate(booking.stay.checkIn, true)} –{" "}
+                  {formatDate(booking.stay.checkOut, true)} ·{" "}
+                  {booking.stay.nights}{" "}
+                  {booking.stay.nights === 1 ? "night" : "nights"}
+                  {booking.bookingSite && ` · ${booking.bookingSite}`}
+                </p>
               </div>
-            </>
-          )
+              <span className="muted text-xs">
+                {booking.status === "blocked" ? "Block" : "Booking"}{" "}
+                <span className="money">{booking.id}</span>
+              </span>
+            </div>
+            {booking.status === "blocked" ? (
+              <OwnerBlock booking={booking} />
+            ) : (
+              financials && (
+                <>
+                  <HeroPayout booking={booking} owner={owner} today={today} />
+                  <div className="mt-5 grid items-start gap-5 lg:grid-cols-[1.6fr_1fr]">
+                    <ReconciliationWaterfall financials={financials} />
+                    <RateIntelligence
+                      booking={booking}
+                      financials={financials}
+                    />
+                  </div>
+                </>
+              )
+            )}
+          </>
         )}
-        <p className="muted mt-6 text-[11px]">
+        <p className="numeric muted mt-6 text-[11px]">
           Synthetic exercise data · As of {formatDate(today, true)} · USD
         </p>
         <div role="status" aria-live="polite" className="sr-only">
-          Showing {booking.guest?.name ?? "owner reserved block"}.
+          {booking
+            ? `Showing ${booking.guest?.name ?? "owner reserved block"}.`
+            : "Booking Not Found."}
         </div>
       </main>
     </>
