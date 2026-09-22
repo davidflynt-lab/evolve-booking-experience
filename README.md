@@ -1,6 +1,6 @@
 # Evolve Booking Detail
 
-A Next.js App Router application for the single-booking financial experience. Built with TypeScript, React, and Tailwind CSS, using the unchanged synthetic payout dataset. Adaeze is selected by default; the breadcrumb selector and pager expose all five core booking states.
+A Next.js App Router application for the single-booking financial experience. Built with TypeScript, React, and Tailwind CSS, using the unchanged synthetic payout dataset. Adaeze is selected by default; the breadcrumb selector and pager expose six curated records across all five core booking states.
 
 ## Run locally
 
@@ -55,11 +55,11 @@ The selector uses a normal button with `aria-haspopup="listbox"` and `aria-expan
 - Charges do not prove guest payment or tax remittance. Daily prices, discount codes, and causal pricing explanations are absent.
 - Cancellation retains original charges but does not invent refund information.
 - The owner block has no supplied maintenance reason, so the app calls it an owner reservation.
-- Booking 15165409 has a future actual-deposit date relative to the exercise date. The helper flags it without modifying the source. It is outside the five default navigation scenarios.
+- Booking 15165409 has a future actual-deposit date relative to the exercise date. The helper flags it without modifying the source. It is directly selectable in the dropdown with an Under Review status.
 
 ## Scope
 
-This is a runnable production-build scaffold, not a deployed service. It has no backend, authentication, real bank integration, or fabricated pricing explanations. All 40 records are reachable through `/?bookingId=<id>`. Missing parameters default to Adaeze; unknown or empty IDs display an accessible not-found card. Preset and pager selections update the URL, and browser back/forward restore selection. The five curated presets remain in the dropdown; when a nonpreset or unknown record is open, Next enters the presets at Adaeze and Previous at the owner block. The missing-record view is a client-rendered state within the static page, not an HTTP 404 response. The original standalone wireframe is retained outside this application.
+This is a runnable production-build scaffold, not a deployed service. It has no backend, authentication, real bank integration, or fabricated pricing explanations. All 40 records are reachable through `/?bookingId=<id>`. Missing parameters default to Adaeze; unknown or empty IDs display an accessible not-found card. Preset and pager selections update the URL, and browser back/forward restore selection. The six curated presets remain in the dropdown; when a nonpreset or unknown record is open, Next enters the presets at Adaeze and Previous at the owner block. The missing-record view is a client-rendered state within the static page, not an HTTP 404 response. The original standalone wireframe is retained outside this application.
 
 Configuration follows the official Next.js App Router and Tailwind PostCSS setup:
 
