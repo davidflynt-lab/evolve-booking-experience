@@ -66,17 +66,17 @@
     @apply inline-block rounded-full border border-line bg-canvas px-3 py-1.5 text-xs font-medium;
   }
   .badge-pending {
-    color: #d97706;
+    color: #92400e;
     background: #fffbeb;
     border-color: #fde6b5;
   }
   .badge-paid {
-    color: #059669;
+    color: #166534;
     background: #ecfdf5;
     border-color: #c3efdf;
   }
   .badge-canceled {
-    color: #e11d48;
+    color: #9f1239;
     background: #fff1f2;
     border-color: #ffd5dd;
   }

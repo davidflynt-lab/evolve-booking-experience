@@ -2,28 +2,21 @@
 import Image from "next/image";
 import { useRef, useState, type KeyboardEvent } from "react";
 import type { Booking } from "@/types/booking";
-import { money, toCents } from "@/lib/financials";
+import { money, toCents, resolvePayoutDisplay } from "@/lib/financials";
 import { stayRange } from "@/lib/dates";
 import { Badge, ChevronIcon } from "./ui";
-export const statusLabel = (b: Booking) =>
-  b.status === "blocked"
-    ? "Nonfinancial"
-    : {
-        paid: "Paid",
-        pending: "Pending",
-        scheduled: "Scheduled",
-        canceled: "Canceled",
-      }[b.payout.status];
 export function BookingNavigation({
   bookings,
   selected,
   onSelect,
   property,
+  today,
 }: {
   bookings: Booking[];
   selected: Booking | undefined;
   onSelect: (id: string) => void;
   property: string;
+  today: string;
 }) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
@@ -120,7 +113,7 @@ export function BookingNavigation({
                   <span className="numeric">
                     {stayRange(selected.stay.checkIn, selected.stay.checkOut)}
                   </span>{" "}
-                  {`(${statusLabel(selected)})`}
+                  {`(${resolvePayoutDisplay(selected, today).label})`}
                 </>
               ) : (
                 "Select a booking"
@@ -179,14 +172,8 @@ export function BookingNavigation({
                         </span>
                       </span>
                       <span className="flex flex-col items-end gap-1">
-                        <Badge
-                          tone={
-                            b.payout && b.payout.status !== "scheduled"
-                              ? b.payout.status
-                              : "neutral"
-                          }
-                        >
-                          {statusLabel(b)}
+                        <Badge tone={resolvePayoutDisplay(b, today).tone}>
+                          {resolvePayoutDisplay(b, today).label}
                         </Badge>
                         <span className="money">
                           {b.payout

@@ -100,3 +100,27 @@ export function payoutIssues(booking: Reservation, today: string): string[] {
     issues.push("The recorded deposit is later than the exercise date.");
   return issues;
 }
+
+/** Audit-aware presentation shared by navigation and the payout card. */
+export function resolvePayoutDisplay(booking: Booking, today: string) {
+  const issues =
+    booking.status === "blocked" ? [] : payoutIssues(booking, today);
+  if (issues.length)
+    return { label: "Under Review", tone: "neutral" as const, issues };
+  if (booking.status === "blocked")
+    return { label: "Nonfinancial", tone: "neutral" as const, issues };
+  const labels = {
+    paid: "Paid",
+    pending: "Pending",
+    scheduled: "Scheduled",
+    canceled: "Canceled",
+  };
+  return {
+    label: labels[booking.payout.status],
+    tone:
+      booking.payout.status === "scheduled"
+        ? ("neutral" as const)
+        : booking.payout.status,
+    issues,
+  };
+}

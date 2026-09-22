@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { BookingNavigation } from "../src/components/booking-navigation";
+import { resolvePayoutDisplay } from "../src/lib/financials";
 import { HeroPayout } from "../src/components/hero-payout";
 import { dataset, getBookingById } from "../src/lib/data";
 
@@ -14,6 +16,28 @@ test("future paid deposit has one status chip and one explanatory alert", () => 
       owner: dataset.owner,
       today: dataset.meta.todayForExercise,
     }),
+  );
+  const nav = renderToStaticMarkup(
+    createElement(BookingNavigation, {
+      bookings: [booking],
+      selected: booking,
+      onSelect: () => {},
+      property: dataset.listing.name,
+      today: dataset.meta.todayForExercise,
+    }),
+  );
+  assert.ok(nav.includes("(Under Review)"));
+  assert.ok(!nav.includes("(Paid)"));
+  assert.equal(
+    resolvePayoutDisplay(booking, dataset.meta.todayForExercise).tone,
+    "neutral",
+  );
+  assert.equal(
+    resolvePayoutDisplay(
+      getBookingById("15659176")!,
+      dataset.meta.todayForExercise,
+    ).label,
+    "Paid",
   );
   const text = html.replace(/<[^>]+>/g, "");
   assert.equal((html.match(/role="alert"/g) ?? []).length, 1);

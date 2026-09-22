@@ -48,6 +48,7 @@ export function BookingExperience({
         selected={booking}
         onSelect={selectBooking}
         property={listing.name}
+        today={today}
       />
       <main id="booking-content" className="mx-auto max-w-6xl px-6 py-8">
         {!booking ? (

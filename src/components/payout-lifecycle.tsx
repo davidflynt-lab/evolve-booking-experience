@@ -37,7 +37,7 @@ export function PayoutLifecycle({
       name: "Payout processing",
       date: canceled
         ? "Not initiated"
-        : "Initiated ~2 business days post check-in",
+        : "Typically initiated ~2 business days after check-in",
       note: canceled ? "Canceled" : "Typical timing · initiation not confirmed",
       done: false,
     },

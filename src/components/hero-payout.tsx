@@ -1,5 +1,5 @@
 import type { Reservation, Dataset } from "@/types/booking";
-import { money, toCents, payoutIssues } from "@/lib/financials";
+import { money, toCents, resolvePayoutDisplay } from "@/lib/financials";
 import { formatDate } from "@/lib/dates";
 import { PayoutLifecycle } from "./payout-lifecycle";
 import { Badge, NumericText } from "./ui";
@@ -15,7 +15,8 @@ export function HeroPayout({
   const p = booking.payout,
     canceled = p.status === "canceled",
     paid = p.status === "paid";
-  const issues = payoutIssues(booking, today);
+  const display = resolvePayoutDisplay(booking, today);
+  const { issues } = display;
   const futureDatedDeposit =
     paid && p.depositedDate !== null && p.depositedDate > today;
   return (
@@ -40,24 +41,8 @@ export function HeroPayout({
             >
               {money(toCents(p.amount))}
             </strong>
-            <Badge
-              tone={
-                issues.length
-                  ? "neutral"
-                  : p.status === "scheduled"
-                    ? "neutral"
-                    : p.status
-              }
-            >
-              {issues.length
-                ? "Under Review"
-                : canceled
-                  ? "Canceled"
-                  : paid
-                    ? "Paid"
-                    : p.status === "scheduled"
-                      ? "Scheduled"
-                      : "Pending deposit"}
+            <Badge tone={display.tone}>
+              {display.label === "Pending" ? "Pending deposit" : display.label}
             </Badge>
           </div>
         </div>
